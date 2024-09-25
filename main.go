@@ -12,7 +12,11 @@ import (
 )
 
 func main() {
-	yamlFile, err := os.ReadFile("label-syncer.yaml")
+	labelSynceFile := os.Getenv("LABEL_SYNCER_CONFIG_FILE")
+	if labelSynceFile == "" {
+		log.Fatalf("LABEL_SYNCER_CONFIG_FILE environment variable not set")
+	}
+	yamlFile, err := os.ReadFile(labelSynceFile)
 	if err != nil {
 		log.Fatalf("Error reading YAML file: %v", err)
 	}
