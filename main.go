@@ -26,11 +26,6 @@ func main() {
 		log.Fatalf("Error parsing YAML: %v", err)
 	}
 
-	policyName := os.Getenv("POLICY_NAME")
-	if policyName == "" {
-		log.Fatalf("POLICY_NAME environment variable not set")
-	}
-
 	ghToken := os.Getenv("GITHUB_TOKEN")
 	if ghToken == "" {
 		log.Fatalf("GITHUB_TOKEN environment variable not set")
