@@ -1,8 +1,9 @@
 package main
 
 type Labels struct {
-	Org     string `yaml:"org"`
-	General []struct {
+	Org        string `yaml:"org"`
+	PolicyRepo string `yaml:"policyRepo"`
+	General    []struct {
 		Name        string `yaml:"name"`
 		Color       string `yaml:"color"`
 		Description string `yaml:"description"`

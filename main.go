@@ -27,8 +27,9 @@ func main() {
 	if policyName == "" {
 		log.Fatalf("POLICY_NAME environment variable not set")
 	}
-
-	client := sdk.NewGitHubClient(context.Background(), labelSyncer.Org, "", policyName)
+	ctx := context.Background()
+	client := sdk.NewGitHubClient(ctx, labelSyncer.Org, labelSyncer.PolicyRepo, policyName)
+	defer client.Close(ctx)
 
 	opts := &github.RepositoryListByOrgOptions{
 		Type: "all",
