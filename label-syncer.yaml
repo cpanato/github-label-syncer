@@ -1,0 +1,21 @@
+org: "cpanato"
+general:
+  - name: "bugzzz"
+    color: 7F3150
+    description: "Something isn't working"
+  - name: "featurezz"
+    color: 7F3150
+    description: "New feature request"
+ignoreRepos:
+  - repoName: "test-repo"
+repos:
+  - repoName: "testing-ci-providers"
+    labels:
+      name: "testing-label"
+      color: 7F3150
+      description: "Enhancements to the repo"
+  # - repoName: "test-repo"
+  #   labels:
+  #     name: "testing-label-2"
+  #     color: 7F3150
+  #     description: "Documentation related changes"
