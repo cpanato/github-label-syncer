@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/chainguard-dev/terraform-infra-common/modules/github-bots/sdk"
 	"github.com/google/go-github/v61/github"
 	"sigs.k8s.io/yaml"
 )
@@ -31,16 +30,19 @@ func main() {
 	if policyName == "" {
 		log.Fatalf("POLICY_NAME environment variable not set")
 	}
-	ctx := context.Background()
-	client := sdk.NewGitHubClient(ctx, labelSyncer.Org, labelSyncer.PolicyRepo, policyName)
-	defer client.Close(ctx)
+
+	ghToken := os.Getenv("GITHUB_TOKEN")
+	if ghToken == "" {
+		log.Fatalf("GITHUB_TOKEN environment variable not set")
+	}
+	client := github.NewClient(nil).WithAuthToken(ghToken)
 
 	opts := &github.RepositoryListByOrgOptions{
 		Type: "all",
 	}
 	repos := []*github.Repository{}
 	for {
-		moreRepos, resp, err := client.Client().Repositories.ListByOrg(context.Background(), labelSyncer.Org, opts)
+		moreRepos, resp, err := client.Repositories.ListByOrg(context.Background(), labelSyncer.Org, opts)
 		if err != nil {
 			log.Fatalf("Error client.Repositories.List: %v", err)
 		}
@@ -72,7 +74,7 @@ func main() {
 
 		log.Printf("Will process labels for %s\n", repo.GetName())
 		for _, label := range labelSyncer.General {
-			_, _, err := client.Client().Issues.CreateLabel(context.Background(), labelSyncer.Org, repo.GetName(), &github.Label{
+			_, _, err := client.Issues.CreateLabel(context.Background(), labelSyncer.Org, repo.GetName(), &github.Label{
 				Name:        &label.Name,
 				Color:       &label.Color,
 				Description: &label.Description,
@@ -85,7 +87,7 @@ func main() {
 		for _, labelRepo := range labelSyncer.Repos {
 			log.Printf("Applying repo specific labels for %s\n", repo.GetName())
 			if labelRepo.RepoName == repo.GetName() {
-				_, _, err := client.Client().Issues.CreateLabel(context.Background(), labelSyncer.Org, repo.GetName(), &github.Label{
+				_, _, err := client.Issues.CreateLabel(context.Background(), labelSyncer.Org, repo.GetName(), &github.Label{
 					Name:        &labelRepo.Labels.Name,
 					Color:       &labelRepo.Labels.Color,
 					Description: &labelRepo.Labels.Description,
