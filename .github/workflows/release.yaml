@@ -12,7 +12,7 @@ permissions: read-all
 jobs:
   release:
     permissions:
-      contents: read # needed to clone
+      contents: write # needed to create releases
       id-token: write # needed for keyless signing
       packages: write # needed for pushing the image
 
