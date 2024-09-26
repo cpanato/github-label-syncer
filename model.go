@@ -12,7 +12,7 @@ type Labels struct {
 	} `yaml:"ignoreRepos"`
 	Repos []struct {
 		RepoName string `yaml:"repoName"`
-		Labels   struct {
+		Labels   []struct {
 			Name        string `yaml:"name"`
 			Color       string `yaml:"color"`
 			Description string `yaml:"description"`

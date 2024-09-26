@@ -82,13 +82,16 @@ func main() {
 		for _, labelRepo := range labelSyncer.Repos {
 			log.Printf("Applying repo specific labels for %s\n", repo.GetName())
 			if labelRepo.RepoName == repo.GetName() {
-				_, _, err := client.Issues.CreateLabel(context.Background(), labelSyncer.Org, repo.GetName(), &github.Label{
-					Name:        &labelRepo.Labels.Name,
-					Color:       &labelRepo.Labels.Color,
-					Description: &labelRepo.Labels.Description,
-				})
-				if err != nil && err.(*github.ErrorResponse).Response.StatusCode != 422 {
-					log.Fatalf("Error client.Issues.CreateLabel: %v", err)
+				for _, labelRepo := range labelRepo.Labels {
+					log.Printf("Applying label %s for %s\n", labelRepo.Name, repo.GetName())
+					_, _, err := client.Issues.CreateLabel(context.Background(), labelSyncer.Org, repo.GetName(), &github.Label{
+						Name:        &labelRepo.Name,
+						Color:       &labelRepo.Color,
+						Description: &labelRepo.Description,
+					})
+					if err != nil && err.(*github.ErrorResponse).Response.StatusCode != 422 {
+						log.Fatalf("Error client.Issues.CreateLabel: %v", err)
+					}
 				}
 			}
 		}
